@@ -56,11 +56,6 @@ const MOCK_CATEGORIES = [
   `Железо`,
 ];
 
-const SumRestrict = {
-  MIN: 1000,
-  MAX: 100000,
-};
-
 const SentencesRestrict = {
   MIN: 1,
   MAX: 5,
@@ -80,7 +75,6 @@ const ExitCode = {
 const DEFAULT_CLI_COMMAND = CliCommand.HELP;
 
 module.exports = {
-  SumRestrict,
   SentencesRestrict,
   MAX_MOCK_ITEMS,
   MONTHS_AGO,
