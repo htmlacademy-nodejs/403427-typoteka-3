@@ -56,19 +56,9 @@ const MOCK_CATEGORIES = [
   `Железо`,
 ];
 
-const OfferType = {
-  OFFER: `offer`,
-  SALE: `sale`,
-};
-
 const SumRestrict = {
   MIN: 1000,
   MAX: 100000,
-};
-
-const PictureRestrict = {
-  MIN: 1,
-  MAX: 16,
 };
 
 const SentencesRestrict = {
@@ -91,9 +81,7 @@ const DEFAULT_CLI_COMMAND = CliCommand.HELP;
 
 module.exports = {
   SumRestrict,
-  PictureRestrict,
   SentencesRestrict,
-  OfferType,
   MAX_MOCK_ITEMS,
   MONTHS_AGO,
   MOCK_CATEGORIES,
