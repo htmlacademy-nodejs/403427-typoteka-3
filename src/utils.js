@@ -29,8 +29,14 @@ const shuffle = (someArray) => {
   return someArray;
 };
 
+const checkNumParam = (value, defaultValue) => {
+  const valueNum = Number.parseInt(value, 10);
+  return valueNum && valueNum > 0 ? valueNum : defaultValue;
+};
+
 module.exports = {
   getRandomInt,
   getRandomDateMonthsAgo,
-  shuffle
+  shuffle,
+  checkNumParam
 };
