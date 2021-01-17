@@ -18,7 +18,8 @@ const SentencesRestrict = {
 const CliCommand = {
   HELP: `--help`,
   VERSION: `--version`,
-  GENERATE: `--generate`
+  GENERATE: `--generate`,
+  SERVER: `--server`
 };
 
 const ExitCode = {
@@ -26,7 +27,18 @@ const ExitCode = {
   SUCCESS: 0,
 };
 
+const HttpCode = {
+  OK: 200,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500,
+  FORBIDDEN: 403,
+  UNAUTHORIZED: 401,
+};
+
 const DEFAULT_CLI_COMMAND = CliCommand.HELP;
+
+const DEFAULT_PORT = 3000;
+const FILENAME = `mocks.json`;
 
 module.exports = {
   SentencesRestrict,
@@ -40,5 +52,8 @@ module.exports = {
   ExitCode,
   CliCommand,
   DEFAULT_CLI_COMMAND,
-  USER_ARGV_INDEX
+  USER_ARGV_INDEX,
+  DEFAULT_PORT,
+  FILENAME,
+  HttpCode
 };
