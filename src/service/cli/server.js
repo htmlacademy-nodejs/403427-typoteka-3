@@ -30,6 +30,11 @@ app.use((req, res) => res
   .status(HttpCode.NOT_FOUND)
   .send(`Not found`));
 
+app.use((err, req, res, next) => {
+  res.status(HttpCode.INTERNAL_SERVER_ERROR).send(err);
+  next();
+});
+
 module.exports = {
   name: CliCommand.SERVER,
   run(args) {
