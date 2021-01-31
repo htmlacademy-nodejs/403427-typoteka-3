@@ -2,6 +2,7 @@
 
 const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
+const {nanoid} = require(`nanoid`);
 
 const {
   CliCommand,
@@ -10,10 +11,13 @@ const {
   FILE_TITLES_PATH,
   FILE_CATEGORIES_PATH,
   FILE_SENTENCES_PATH,
+  FILE_COMMENTS_PATH,
   MAX_MOCK_ITEMS,
+  MAX_COMMENTS,
   MONTHS_AGO,
   SentencesRestrict,
-  ExitCode
+  ExitCode,
+  MAX_ID_LENGTH
 } = require(`../../constants`);
 
 const {
@@ -22,15 +26,26 @@ const {
   shuffle
 } = require(`../../utils`);
 
-const generateOffers = (count, titles, categories, sentences) => {
+const generateArticles = (count, titles, categories, sentences, comments) => {
   return Array(count).fill({}).map(() => ({
+    id: nanoid(MAX_ID_LENGTH),
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffle(sentences).slice(SentencesRestrict.MIN, SentencesRestrict.MAX).join(` `),
     fullText: shuffle(sentences).slice(0, sentences.length - 1).join(` `),
     createdDate: getRandomDateMonthsAgo(MONTHS_AGO),
     category: shuffle(categories).slice(getRandomInt(0, categories.length - 1)),
+    comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),
   }));
 };
+
+const generateComments = (count, comments) => (
+  Array(count).fill({}).map(() => ({
+    id: nanoid(MAX_ID_LENGTH),
+    text: shuffle(comments)
+      .slice(0, getRandomInt(1, 3))
+      .join(` `),
+  }))
+);
 
 const readContent = async (filePath) => {
   try {
@@ -47,10 +62,10 @@ const readContent = async (filePath) => {
   }
 };
 
-const writeOffers = async (offers) => {
+const writeArticles = async (articles) => {
   try {
-    await fs.writeFile(MOCK_FILE_NAME, JSON.stringify(offers));
-    console.info(chalk.green(`Данные в количестве ${offers.length} успешно сформированы в файл ${MOCK_FILE_NAME}`));
+    await fs.writeFile(MOCK_FILE_NAME, JSON.stringify(articles));
+    console.info(chalk.green(`Данные в количестве ${articles.length} успешно сформированы в файл ${MOCK_FILE_NAME}`));
     process.exit(ExitCode.SUCCESS);
   } catch (err) {
     console.info(chalk.red(`Ошибка при создании данных`, err));
@@ -64,16 +79,17 @@ module.exports = {
   async run(args = []) {
     const [userCount] = args;
     const count = Number.parseInt(userCount, 10);
-    const countOffer = count && count > 0 ? count : DEFAULT_GENERATE_COUNT;
+    const countArticle = count && count > 0 ? count : DEFAULT_GENERATE_COUNT;
 
-    if (countOffer > MAX_MOCK_ITEMS) {
+    if (countArticle > MAX_MOCK_ITEMS) {
       console.info(chalk.red(`Не больше ${MAX_MOCK_ITEMS} публикаций`));
       process.exit(ExitCode.FATAL_EXCEPTION);
     }
     const titles = await readContent(FILE_TITLES_PATH);
     const categories = await readContent(FILE_CATEGORIES_PATH);
     const sentences = await readContent(FILE_SENTENCES_PATH);
-    const offers = await generateOffers(countOffer, titles, categories, sentences);
-    writeOffers(offers);
+    const comments = await readContent(FILE_COMMENTS_PATH);
+    const articles = await generateArticles(countArticle, titles, categories, sentences, comments);
+    writeArticles(articles);
   }
 };
