@@ -5,8 +5,6 @@ const category = require(`../api/category`);
 const article = require(`../api/article`);
 const search = require(`../api/search`);
 
-const getMockData = require(`../lib/get-mock-data`);
-
 const {
   CategoryService,
   SearchService,
@@ -16,12 +14,11 @@ const {
 
 const app = new Router();
 
-(async () => {
-  const mockData = await getMockData();
-
+const initAPI = (mockData) => {
   category(app, new CategoryService(mockData));
   search(app, new SearchService(mockData));
   article(app, new ArticleService(mockData), new CommentService());
-})();
+  return app;
+};
 
-module.exports = app;
+module.exports = initAPI;
