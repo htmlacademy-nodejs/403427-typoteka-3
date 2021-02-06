@@ -2,6 +2,8 @@
 
 const fs = require(`fs`).promises;
 const FILENAME = `mocks.json`;
+const {getLogger} = require(`../lib/logger`);
+const logger = getLogger({name: `api`});
 let data = null;
 
 const getMockData = async () => {
@@ -13,7 +15,7 @@ const getMockData = async () => {
     const fileContent = await fs.readFile(FILENAME);
     data = JSON.parse(fileContent);
   } catch (err) {
-    console.log(err);
+    logger.error(`An error occured on getting mock data: ${err.message}`);
     return Promise.reject(err);
   }
 
@@ -25,7 +27,7 @@ const getMockData = async () => {
     const fileContent = await fs.readFile(FILENAME);
     data = JSON.parse(fileContent);
   } catch (err) {
-    console.log(err);
+    logger.error(`An error occured: ${err.message}`);
   }
 })();
 

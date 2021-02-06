@@ -47,6 +47,11 @@ const API_PREFIX = `/api`;
 const DEFAULT_PORT = 3000;
 const FILENAME = `mocks.json`;
 
+const Env = {
+  DEVELOPMENT: `development`,
+  PRODUCTION: `production`
+};
+
 module.exports = {
   SentencesRestrict,
   MAX_MOCK_ITEMS,
@@ -66,5 +71,6 @@ module.exports = {
   HttpCode,
   MAX_ID_LENGTH,
   MAX_COMMENTS,
-  API_PREFIX
+  API_PREFIX,
+  Env
 };

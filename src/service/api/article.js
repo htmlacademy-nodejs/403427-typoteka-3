@@ -22,7 +22,7 @@ module.exports = (app, articleService, commentService) => {
 
     if (!article) {
       return res.status(HttpCode.NOT_FOUND)
-        .send(`Not found with ${articleId}`);
+        .json({error: `Not found with ${articleId}`});
     }
 
     return res.status(HttpCode.OK)
@@ -42,7 +42,7 @@ module.exports = (app, articleService, commentService) => {
 
     if (!existArticle) {
       return res.status(HttpCode.NOT_FOUND)
-        .send(`Not found with ${articleId}`);
+        .json({error: `Not found with ${articleId}`});
     }
 
     const updatedArticle = articleService.update(articleId, req.body);
@@ -57,7 +57,7 @@ module.exports = (app, articleService, commentService) => {
 
     if (!article) {
       return res.status(HttpCode.NOT_FOUND)
-        .send(`Not found`);
+        .json({error: `Not found`});
     }
 
     return res.status(HttpCode.OK)
