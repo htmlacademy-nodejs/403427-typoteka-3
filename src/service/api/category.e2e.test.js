@@ -24,10 +24,10 @@ describe(`Categories API end-to-end tests`, () => {
   let res;
   beforeAll(async () => {
     res = await request(app)
-      .get(`/api/category`);
+      .get(`/api/categories`);
   });
 
-  test(`When get /api/category response code should be 200`, () => {
+  test(`When get /api/categories response code should be 200`, () => {
     expect(res.statusCode).toBe(HttpCode.OK);
   });
 

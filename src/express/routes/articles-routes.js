@@ -2,18 +2,18 @@
 
 const {Router} = require(`express`);
 const multer = require(`multer`);
-const path = require(`path`);
 const {nanoid} = require(`nanoid`);
+const dayjs = require(`dayjs`);
+const path = require(`path`);
+const {categories} = require(`../../constants`);
 
-const UPLOAD_DIR = `../upload/img/`;
+const UPLOAD_DIR = path.resolve(__dirname, `../upload/img/`);
 
-const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
-
-const api = require(`../api`).getAPI();
 const articlesRouter = new Router();
+const api = require(`../api`).getAPI();
 
 const storage = multer.diskStorage({
-  destination: uploadDirAbsolute,
+  destination: UPLOAD_DIR,
   filename: (req, file, cb) => {
     const uniqueName = nanoid(10);
     const extension = file.originalname.split(`.`).pop();
@@ -23,22 +23,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
-
-articlesRouter.get(`/category/:id`, (req, res) => res.render(`articles-by-category`));
-
-articlesRouter.get(`/add`, async (req, res) => {
-  const categories = await api.getCategories();
-  res.render(`articles/new-ticket`, {categories});
-});
-
 articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   const {body, file} = req;
   const articleData = {
     picture: file.filename,
-    description: body.comment,
-    title: body[`ticket-name`],
-    category: body.category
+    createdDate: body[`public-date`],
+    title: body.title,
+    announce: body.announce,
+    fullText: body[`full-text`],
+    category: [`Книги`]
   };
+
   try {
     await api.createArticle(articleData);
     res.redirect(`/my`);
@@ -47,17 +42,19 @@ articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   }
 });
 
-articlesRouter.get(`/edit/:id`, async (req, res) => {
-  const {id} = req.params;
-  const [article, categories] = await Promise.all([
-    api.getArticle(id),
-    api.getCategories()
-  ]);
-  res.render(`articles/ticket-edit`, {article, categories});
+articlesRouter.get(`/add`, async (req, res) => {
+  const allCategories = await api.getCategories();
+  res.render(`admin-add-new-post-empty`, {allCategories});
 });
 
+articlesRouter.get(`/edit/:id`, async (req, res) => {
+  const {id} = req.params;
+  const article = await api.getArticle(id);
+  article.createdDate = dayjs(article.createdDate).format(`DD.MM.YYYY`);
+  res.render(`admin-add-new-post`, {article, categories});
+});
 
-
+articlesRouter.get(`/category/:id`, (req, res) => res.render(`publications-by-category`));
 articlesRouter.get(`/:id`, (req, res) => res.render(`post`));
 
 module.exports = articlesRouter;

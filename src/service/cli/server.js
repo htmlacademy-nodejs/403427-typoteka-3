@@ -19,8 +19,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 module.exports = {
   app,
   name: `--server`,
@@ -38,7 +36,7 @@ module.exports = {
         .send(`Not found`));
 
       try {
-        app.listen(process.env.PORT || DEFAULT_PORT);;
+        app.listen(process.env.PORT || DEFAULT_PORT);
         logger.info(`Listening to connections on ${port}`);
       } catch (err) {
         logger.error(`An error occured on server creation: ${err.message}`);

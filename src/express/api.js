@@ -35,7 +35,7 @@ class API {
   }
 
   async getCategories() {
-    return this._load(`/category`);
+    return this._load(`/categories`);
   }
 
   async createArticle(data) {
